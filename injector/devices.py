@@ -901,4 +901,67 @@ DEVICES = [
         },
         cert_bypass=CertBypass.WRAP
     ),
+    Device(
+        'tanzanite',
+        'Redmi Note 14 4G',
+        {
+            'sec_get_vfy_policy': PatchStage(
+                'sec_get_vfy_policy',
+                pattern='00 01 00 b4 fd 7b bf a9',
+                replacement='00 00 80 52 c0 03 5f d6',
+                match_mode=MatchMode.ALL,
+                description='Don\'t enforce secure boot policy',
+            ),
+            'spoof_sboot_state': PatchStage(
+                'spoof_get_sboot_state',
+                pattern='fd 7b be a9 f3 0b 00 f9 fd 03 00 91 f3 03 00 aa 20 00 80 52 c9',
+                replacement='48 04 80 52 08 00 00 b9 00 00 80 52 c0 03 5f d6 1f 20 03 d5 c9',
+                match_mode=MatchMode.ALL,
+                description='Force sboot state to always be ATTR_SBOOT_ONLY_ENABLE_ON_SCHIP',
+            ),
+            'force_green_state': PatchStage(
+                'force_green_state',
+                pattern='68 03 00 d0 00 b1 0d b9 c0 03 5f d6',
+                replacement='68 03 00 d0 1f b1 0d b9 c0 03 5f d6',
+                match_mode=MatchMode.ALL,
+                description='Force boot state to always be set to green',
+            ),
+            'bypass_security_control': PatchStage(
+                'bypass_security_control',
+                pattern='ae e6 01 94 e0 23 00 91 f4 90 00 94 e8 0f 40 b9 68 00 00 34 08 17 40 b9 68 00 00 34',
+                replacement='ae e6 01 94 e0 23 00 91 f4 90 00 94 0e 00 00 14 68 00 00 34 08 17 40 b9 68 00 00 34',
+                match_mode=MatchMode.ALL,
+                description='Skip security error branch - always execute commands',
+            ),
+            'bypass_security_control2': PatchStage(
+                'bypass_security_control2',
+                pattern='68 53 40 b9 1f 05 00 71 e1 ed ff 54 e8 0f 40 b9',
+                replacement='68 53 40 b9 1f 05 00 71 6f ff ff 17 e8 0f 40 b9',
+                match_mode=MatchMode.ALL,
+                description='Skip security error branch - always execute commands',
+            ),
+            'spoof_seccfg_state': PatchStage(
+                'spoof_seccfg_state',
+                pattern='20 02 00 b4 fd 7b be a9 f3 0b 00 f9 fd 03 00 91',
+                replacement='88 00 80 52 08 00 00 b9 00 00 80 52 c0 03 5f d6',
+                match_mode=MatchMode.ALL,
+                description='Force seccfg state to always be LKS_LOCK',
+            ),
+            'spoof_get_lock_state': PatchStage(
+                'spoof_custom_lock_state',
+                pattern='a0 13 00 d1 b4 53 3f 29 a7 64 01 94 e0 00 00 34',
+                replacement='a0 13 00 d1 b4 53 3f 29 00 00 80 52 e0 00 00 34',
+                match_mode=MatchMode.ALL,
+                description='Ignore custom_lock state in get_lock_state',
+            ),
+            'spoof_get_lock_state2': PatchStage(
+                'spoof_custom_lock_state2',
+                pattern='18 00 00 14 a0 23 00 d1 a3 00 00 94 00 01 00 34 aa 27 7f 29',
+                replacement='18 00 00 14 a0 23 00 d1 00 00 80 52 00 01 00 34 aa 27 7f 29',
+                match_mode=MatchMode.ALL,
+                description='Ignore seccfg state in get_lock_state',
+            ),
+        },
+        cert_bypass=CertBypass.OVERRIDE
+    ),
 ]
